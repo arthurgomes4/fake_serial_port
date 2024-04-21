@@ -3,45 +3,45 @@
 
 ### Docker Usage:
 * Build the image: 
-```
-docker build -t fake_serial_port .
-```
+    ```
+    docker build -t fake_serial_port .
+    ```
 
 * Run the container and enter a terminal session:
-```
-docker run --rm --name fake_serial_port -it fake_serial_port bash
-```
+    ```
+    docker run --rm --name fake_serial_port -it fake_serial_port bash
+    ```
 
 * In a different terminal, enter a terminal session in the running container:
-```
-docker exec -it fake_serial_port bash
-```
+    ```
+    docker exec -it fake_serial_port bash
+    ```
 
 ### Echo Example
 Emulate a serial device that will echo all data sent to it. Build and Run the container as per [docker usage](#docker-usage).
 
 * Run the "device"
-```
-socat -d -d pty,rawer,echo=0,link=/dev/device EXEC:./echo,pty,rawer
-```
+    ```
+    socat -d -d pty,rawer,echo=0,link=/dev/device EXEC:./echo,pty,rawer
+    ```
 
 * Run the code to be tested with said "device". This code uses the python module `pyserial`.
-```
-python3 test_pyserial.py
-```
+    ```bash
+    python3 test_pyserial.py # will send a message to serial port every second and print response to console
+    ```
 
 ### Talker Example
 Emulate a serial device that writes data at contant rate.  Build and Run the container as per [docker usage](#docker-usage).
 
 * Run the "device"
-```
-socat -d -d pty,rawer,echo=0,link=/dev/device EXEC:./talk,pty,rawer
-```
+    ```
+    socat -d -d pty,rawer,echo=0,link=/dev/device EXEC:./talk,pty,rawer
+    ```
 
 * Run the code to be tested with the "device". This code uses the python module `fileinput`.
-```
-python3 test_fileinput.py
-```
+    ```bash
+    python3 test_fileinput.py # will simply read and print data to console
+    ```
 
 ### Notes for Socat:
 * Using `socat -d -d pty,rawer,echo=0,link=<serial_port> EXEC:<executable/command>,pty,rawer` will set up a virtual port and pipe the IO to this virtual port to the stdin/stdout of a process. 
